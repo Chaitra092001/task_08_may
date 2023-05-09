@@ -34,29 +34,18 @@ delete from salesman where SALESMAN_ID= 100;
 
 
 ALTER TRIGGER  tr_tbl_salesman_update ON salesman
-
 FOR UPDATE
-
 AS BEGIN
-
 DECLARE @salesmanid INT
-
 DECLARE @OldName VARCHAR(30), @NewName VARCHAR(30)
-
 DECLARE @Oldcity VARCHAR(30), @Newcity VARCHAR(30)
-
 DECLARE @oldcommission  INT, @Newcommission INT
-
 DECLARE @AuditText VARCHAR(1000);
-
 
 SELECT * INTO #TempTable FROM inserted
 
-
 WHILE (EXISTS(SELECT salesman_id FROM #TempTable)) 
-
 BEGIN
-
 SET @AuditText=' '
 
 SELECT TOP 1 @salesmanid = salesman_id,
@@ -71,32 +60,19 @@ SELECT @OldName= name,
 FROM deleted WHERE SALESMAN_ID=@salesmanid
 SET @AuditText = 'A salesman with id =' + CAST (@salesmanid AS VARCHAR)+ 'changed'
 if (@OldName <> @NewName)
-
 SET @AuditText=@AuditText + ' name from ' +@OldName + ' to ' + @NewName
-
-
 if (@oldcity!= @Newcity)
-
 SET @AuditText = @AuditText + ' city from ' +@Oldcity + ' to ' + @Newcity
-
-
 if (@oldcommission!= @Newcommission)
-
 SET @AuditText = @AuditText + ' commisson from ' + cast (@oldcommission as varchar) + ' to ' + cast (@Newcommission as varchar)
-
 
 insert into tbl_salesmandetails values (@AuditText)
 
-
-
 delete from #TempTable where salesman_id = @salesmanid
-
 end
-
 end
 
 update salesman
-
 set NAME='SHRAVANI' where salesman_id= 5001;
 
 select * from salesman
